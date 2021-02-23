@@ -5,12 +5,19 @@ using UnityEngine;
 
 public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IHealable<int>, IKillable
 {
-    private PlayerBaseState CurrentState;
+    private BaseState CurrentState;
 
+    public int HitPoints = 100;
+    public float WeaponSpreadMultiplier = 1.0f;
 
     public void Damage(int damageTaken)
     {
-        throw new System.NotImplementedException();
+        HitPoints -= damageTaken;
+
+        if (HitPoints <= 0)
+        {
+            Kill();
+        }
     }
 
     public BaseState GetState()
@@ -30,12 +37,22 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
 
     public void Kill()
     {
-        throw new System.NotImplementedException();
+        SetState(new PlayerDead(gameObject));
     }
 
     public void SetState(BaseState state)
     {
-        throw new System.NotImplementedException();
+        if (CurrentState != null)
+        {
+            CurrentState.OnStateLeave();
+        }
+
+        CurrentState = state;
+
+        if (CurrentState != null)
+        {
+            CurrentState.OnStateEnter();
+        }
     }
 
     public bool IsGrounded()
@@ -46,7 +63,7 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
@@ -63,6 +80,12 @@ public class PlayerStanding : PlayerBaseState
     {
 
     }
+
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        playerStateManager.WeaponSpreadMultiplier = 1.0f;
+    }
 }
 
 public class PlayerCrouching : PlayerBaseState
@@ -70,6 +93,12 @@ public class PlayerCrouching : PlayerBaseState
     public PlayerCrouching(GameObject player) : base(player)
     {
 
+    }
+
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        playerStateManager.WeaponSpreadMultiplier = 0.6f;
     }
 }
 
@@ -83,7 +112,23 @@ public class PlayerJumping : PlayerBaseState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        playerStateManager.WeaponSpreadMultiplier = 1.5f;
         // check if jump was pressed 
         //  -> trigger jump animation or go straight to mid jump
+    }
+}
+
+public class PlayerDead : PlayerBaseState
+{
+    public PlayerDead(GameObject player) : base(player)
+    {
+
+    }
+
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        // Play death animation
+        Debug.Log("Player Should play death animation");
     }
 }
