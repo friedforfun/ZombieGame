@@ -6,9 +6,14 @@ using UnityEngine;
 public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IHealable<int>, IKillable
 {
     private BaseState CurrentState;
+    private PlayerCombat playerCombat;
 
     public int HitPoints = 100;
     public float WeaponSpreadMultiplier = 1.0f;
+
+    public bool sprinting = false;
+    public bool jumpBlocked = false;
+    public bool aimHeld = false;
 
     public void Damage(int damageTaken)
     {
@@ -55,15 +60,14 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
         }
     }
 
-    public bool IsGrounded()
-    {
-        return true;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-       
+        CurrentState = new PlayerStanding(gameObject);
+
+        playerCombat = GetComponent<PlayerCombat>();
+        if (playerCombat is null)
+            throw new UnassignedReferenceException();
     }
 
     // Update is called once per frame
@@ -71,11 +75,21 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
     {
         
     }
+
+    public void ShootDown()
+    {
+        playerCombat.ShootDown();
+    }
+
+    public void ShootUp()
+    {
+        playerCombat.ShootUp();
+    }
+
 }
 
 public class PlayerStanding : PlayerBaseState
 {
-    private bool Sprinting = false;
     public PlayerStanding(GameObject player) : base(player)
     {
 
@@ -92,7 +106,7 @@ public class PlayerCrouching : PlayerBaseState
 {
     public PlayerCrouching(GameObject player) : base(player)
     {
-
+        
     }
 
     public override void OnStateEnter()
@@ -113,8 +127,7 @@ public class PlayerJumping : PlayerBaseState
     {
         base.OnStateEnter();
         playerStateManager.WeaponSpreadMultiplier = 1.5f;
-        // check if jump was pressed 
-        //  -> trigger jump animation or go straight to mid jump
+
     }
 }
 

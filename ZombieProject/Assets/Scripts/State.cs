@@ -48,13 +48,11 @@ public class PlayerBaseState : BaseState
             throw new UnassignedReferenceException();
     }
 
-    /// <summary>
-    /// Set isGrounded on all state transitions
-    /// </summary>
+
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        isGrounded = playerStateManager.IsGrounded();
+ 
     }
 
     public override void UpdateState()
