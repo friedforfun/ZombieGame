@@ -85,7 +85,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   IgnoreTag: 
-  AimDistance: 100
+  AimDistance: 10
   AimTargetReticle: {fileID: 0}
 --- !u!114 &5114339162264472285
 MonoBehaviour:
@@ -134,7 +134,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5114339163816571582}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &5114339162580952403
 Camera:
@@ -337,7 +337,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   IgnoreTag: 
-  AimDistance: 100
+  AimDistance: 10
   AimTargetReticle: {fileID: 0}
 --- !u!114 &5114339162646240548
 MonoBehaviour:
@@ -599,7 +599,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   IgnoreTag: 
-  AimDistance: 100
+  AimDistance: 10
   AimTargetReticle: {fileID: 0}
 --- !u!114 &5114339163503236821
 MonoBehaviour:
@@ -724,8 +724,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 5114339164248739526}
   - {fileID: 5114339162580952402}
+  - {fileID: 5114339164248739526}
   - {fileID: 5114339162646240549}
   - {fileID: 5114339162264472286}
   - {fileID: 5114339163503236822}
@@ -862,7 +862,7 @@ Transform:
   m_Children:
   - {fileID: 5114339163650318036}
   m_Father: {fileID: 5114339163816571582}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5114339164248739525
 MonoBehaviour:
@@ -915,7 +915,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   IgnoreTag: 
-  AimDistance: 200
+  AimDistance: 10
   AimTargetReticle: {fileID: 0}
 --- !u!114 &5114339164248739524
 MonoBehaviour:

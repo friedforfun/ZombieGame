@@ -10,12 +10,16 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     [SerializeField] public float MovementSpeed = 1f;
     [SerializeField] private Rig HeadRig;
     [SerializeField] public GameObject LookTarget;
+    [SerializeField] public Transform LineOfSightCheckPoint;
     [SerializeField] public NavMeshAgent agent;
     [SerializeField] private BoxCollider LeftHand;
     [SerializeField] private BoxCollider RightHand;
 
+    [SerializeField] public float DetectPlayerRange = 8f;
+    [SerializeField] public LayerMask PlayerLayer;
 
-    private int HitPoints = 100;
+
+    private int HitPoints = 200;
     private BaseState CurrentState;
     public Animator animator;
     public Rigidbody zombieRigidbody;
@@ -40,6 +44,12 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
         {
             Kill();
         }
+
+        if (CurrentState is ZombieUnaware)
+        {
+            SetState(new ZombieAlerted(gameObject));
+        }
+
     }
 
     public void Kill()
@@ -79,7 +89,7 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     // Update is called once per frame
     void Update()
     {
-        if (alertTriggered && !animator.GetBool("HostileInRange") && !(CurrentState is ZombieDead))
+        if (alertTriggered && !animator.GetBool("InAttackRange") && !(CurrentState is ZombieDead))
         {
             lookAtPlayer();
             HeadRig.weight = Mathf.MoveTowards(HeadRig.weight, 1f, Time.deltaTime * rigTransitionSpeed);
@@ -104,12 +114,12 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
 
     public void Attack()
     {
-        animator.SetBool("HostileInRange", true);
+        animator.SetBool("InAttackRange", true);
     }
 
     public void EndAttack()
     {
-        animator.SetBool("HostileInRange", false);
+        animator.SetBool("InAttackRange", false);
     }
 
 
@@ -228,15 +238,31 @@ public class ZombieBaseState : NPCBaseState
         }
     }
 
+    protected bool LineOfSightCheck(GameObject other)
+    {
+        Vector3 directionToOther = other.transform.position - zombie.LineOfSightCheckPoint.position;
+        Debug.DrawRay(zombie.LineOfSightCheckPoint.position, directionToOther, Color.cyan);
+        RaycastHit hit;
+        Ray los = new Ray(zombie.LineOfSightCheckPoint.position, directionToOther);
+        if (Physics.Raycast(los, out hit))
+        {
+            //Debug.Log($"Hit name: {hit.transform.name}");
+            //Debug.Log($"Other name: {other.transform.name}");
+            if (hit.transform.name == other.transform.name) 
+                return true;
+        }
+        return false;
+    }
+
 }
 
 
 public class ZombieUnaware : ZombieBaseState
 {
-    private float detectRange = 8f;
+    private float detectRange;
     public ZombieUnaware(GameObject npc) : base(npc)
     {
-        //EventSystem.current.OnDetectPlayer += this.HandleEvent();
+        detectRange = zombie.DetectPlayerRange;
     }
 
 
@@ -250,7 +276,7 @@ public class ZombieUnaware : ZombieBaseState
         if (distance < detectRange) // player in range
         {
             Debug.Log("Player in range");
-            if (Mathf.Abs(angle) > 80)
+            if (Mathf.Abs(angle) > 80 && LineOfSightCheck(zombie.player))
             {
                 Debug.Log("Zombie should be alerted");
                 zombie.Alert();
@@ -290,13 +316,18 @@ public class ZombieAttack : ZombieBaseState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        zombie.agent.SetDestination(zombie.transform.position);
+        zombie.agent.ResetPath();
         zombie.Attack();
     }
 
     public override void UpdateState()
     {
+        // Orient towards player
+        npc.transform.LookAt(zombie.player.transform);
+
         zombie.animator.SetFloat("Speed", lerpAnimSpeed(0f, 0.15f));
+
+
         float playerDistance = directionToPlayer().magnitude;
         if (playerDistance > zombie.attackRange)
         {
@@ -305,24 +336,38 @@ public class ZombieAttack : ZombieBaseState
         }
     }
 
+    private Quaternion pickDirection()
+    {
+        float orient = Random.Range(-360, 360);
+        Quaternion direction = Quaternion.Euler(0, orient, 0);
+        return direction;
+    }
+
 }
 
 public class ZombiePursue : ZombieBaseState
 {
+    private float xOffset;
+    private float zOffset;
     public ZombiePursue(GameObject npc) : base(npc)
     {
-
+        xOffset = Random.Range(-(zombie.attackRange - 0.1f), (zombie.attackRange - 0.1f));
+        zOffset = Random.Range(-(zombie.attackRange - 0.1f), (zombie.attackRange - 0.1f));
     }
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-
+        zombie.agent.ResetPath();
+        zombie.agent.speed = 4f;
     }
 
     protected void MoveTowardPlayer()
     {
-        zombie.agent.SetDestination(zombie.player.transform.position);
+        Vector3 nearPlayer = zombie.player.transform.position;
+        nearPlayer.x += xOffset;
+        nearPlayer.z += zOffset;
+        zombie.agent.SetDestination(nearPlayer);
     }
 
     public override void UpdateState()
@@ -342,7 +387,7 @@ public class ZombiePursue : ZombieBaseState
 public class ZombieAlerted : ZombieBaseState
 {
 
-    private float pursueDelay = 2f;
+    private float pursueDelay = 2.3f;
 
     public ZombieAlerted(GameObject npc) : base(npc)
     {
@@ -353,6 +398,8 @@ public class ZombieAlerted : ZombieBaseState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        zombie.agent.ResetPath();
+        zombie.animator.SetTrigger("Alerted");
         notifyNearbyZombies();
         Debug.Log("ZOMBIE ALERTED!");
     }
@@ -361,6 +408,7 @@ public class ZombieAlerted : ZombieBaseState
     {
         base.OnStateLeave();
         // Display red glowing eyes
+        zombie.animator.ResetTrigger("Alerted");
     }
 
 
@@ -407,47 +455,58 @@ public class ZombieWander : ZombieUnaware
     // Either repeat this state after timer with a new direction 
     // or go to idle
 
-    private float wanderDuration;
+    private float wanderDistance;
     private Quaternion wanderDirection;
     private Vector3 walkModifier;
 
+    private Vector3 destination;
+    private Vector3 rawDestination;
 
     public ZombieWander(GameObject npc) : base(npc)
     {
-        wanderDuration = Random.Range(2.0f, 6.0f);
-        wanderDirection = pickDirection();
-
-        walkModifier = new Vector3(zombie.MovementSpeed * 0.5f, zombie.MovementSpeed * 0.5f, zombie.MovementSpeed * 0.5f);
+        wanderDistance = Random.Range(2.0f, 4.0f);
+        //wanderDirection = pickDirection();
+        //walkModifier = new Vector3(zombie.MovementSpeed * 0.5f, zombie.MovementSpeed * 0.5f, zombie.MovementSpeed * 0.5f);
+        rawDestination = Random.insideUnitSphere * wanderDistance;
+        destination = new Vector3(npc.transform.position.x + rawDestination.x , npc.transform.position.y + rawDestination.y, npc.transform.position.z + rawDestination.z);
     }
 
     public override void UpdateState()
     {
+
+        zombie.animator.SetFloat("Speed", lerpAnimSpeed(0.5f, 0.25f));
+
         // Wander time exceeded -> new wander or idle state
-        if (Time.time - enterStateTime > wanderDuration)
+        if (zombie.agent.remainingDistance <= 0.05)
         {
             zombie.SetState(nextState());
         }
 
         // Check for player after calling nextSate() to prevent overwriting alerted state
         CheckForPlayer();
-
-        ApplyMove();
     }
 
     private void ApplyMove()
     {
 
-        float turnRatio = (Time.time - enterStateTime) / wanderDuration;
-        zombie.transform.rotation = Quaternion.Slerp(zombie.transform.rotation, wanderDirection, turnRatio);
+        //float turnRatio = (Time.time - enterStateTime) / wanderDuration;
+        //zombie.transform.rotation = Quaternion.Slerp(zombie.transform.rotation, wanderDirection, turnRatio);
         // check if about to collide with wall -> if so zombie.SetState(nextState())
 
         // apply force to zombie to move in wander direction
-        Vector3 movement = zombie.transform.forward;
-        movement.Scale(walkModifier);
+        //Vector3 movement = zombie.transform.forward;
+        //movement.Scale(walkModifier);
 
-        zombie.zombieRigidbody.AddForce(movement);
-        zombie.animator.SetFloat("Speed", lerpAnimSpeed(0.5f, 0.25f));
+        //zombie.zombieRigidbody.AddForce(movement);
+  
 
+    }
+
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        zombie.agent.speed = 1f;
+        zombie.agent.SetDestination(destination);
     }
 
     private Quaternion pickDirection()
@@ -479,7 +538,6 @@ public class ZombieDead : ZombieBaseState
 
         if (Time.time - deathTime >= 3f)
         {
-            Debug.Log("Zombie should destroy");
             zombie.DestroyGameobject(1f);
         }
     }
@@ -488,9 +546,9 @@ public class ZombieDead : ZombieBaseState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        zombie.agent.SetDestination(zombie.transform.position);
-        zombie.animator.SetTrigger("IsDead");
-        zombie.animator.SetBool("Dead", true);
+        zombie.agent.ResetPath();
+        zombie.animator.SetTrigger("Death");
+        zombie.animator.SetBool("IsDead", true);
         Debug.Log("Enter death state");
         //zombie.animator.ResetTrigger("IsDead");
         zombie.animator.SetFloat("Speed", 0);

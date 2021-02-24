@@ -15,9 +15,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] public PlayerWeapon LhGun;
     [SerializeField] public PlayerWeapon RhGun;
 
-    [SerializeField] private float AutoTargetRange = 10f;
+    [SerializeField] private float AutoTargetRange = 50f;
 
     private PlayerRigging PlayerRig;
+    private PlayerStateManager PlayerState;
     private bool canCycleWeapon = true;
     private Vector3 CrosshairPoint;
     private GameObject closestHostile = null;
@@ -26,6 +27,10 @@ public class PlayerCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PlayerState = GetComponent<PlayerStateManager>();
+        if (PlayerState is null)
+            throw new UnassignedReferenceException();
+
         PlayerRig = GetComponent<PlayerRigging>();
         if (PlayerRig is null)
         {
@@ -45,11 +50,17 @@ public class PlayerCombat : MonoBehaviour
         closestHostile = findClosestHostile();
 
         mainhandTarget(CrosshairPoint);
-        offhandTarget(CrosshairPoint);
 
-        if (closestHostile is null)
+        if (closestHostile is null || PlayerState.aimHeld)
         {
-            
+            offhandTarget(CrosshairPoint);
+            SetHeadTarget(CrosshairPoint);
+        }
+        else
+        {
+            Debug.Log("Should aim at enemy");
+            offhandTarget(closestHostile.transform.position);
+            SetHeadTarget(closestHostile.transform.position);
         }
 
     }
@@ -143,7 +154,7 @@ public class PlayerCombat : MonoBehaviour
             if (distance < AutoTargetRange)
             {
                 // Target in front of player?
-                if (Mathf.Abs(angle) > 80)
+                if (Mathf.Abs(angle) > 80 && InLineOfSight(hostile))
                 {
                     if (closestHostile is null)
                     {
@@ -157,6 +168,28 @@ public class PlayerCombat : MonoBehaviour
             }
         }
         return closestHostile;
+    }
+
+    private bool InLineOfSight(GameObject other)
+    {
+        GameObject target = other.GetComponent<ParentPointer>().Parent();
+        Vector3 directionToOther = other.transform.position - AimSource.transform.position;
+        Debug.DrawRay(AimSource.transform.position, directionToOther, Color.blue);
+        RaycastHit hit;
+        Ray los = new Ray(AimSource.transform.position, directionToOther);
+        if (Physics.Raycast(los, out hit))
+        {
+            Debug.Log($"Hit name: {hit.transform.name}");
+            Debug.Log($"Other name: {other.transform.name}");
+            if (hit.transform.name == target.transform.name)
+                return true;
+        }
+        return false;
+    }
+
+    private void SetHeadTarget(Vector3 target)
+    {
+        PlayerRig.lookAtTarget(target);
     }
 
     private void offhandTarget(Vector3 target)

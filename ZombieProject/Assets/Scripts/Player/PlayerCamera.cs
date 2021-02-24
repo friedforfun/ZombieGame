@@ -33,15 +33,17 @@ public class PlayerCamera : MonoBehaviour
     {
         if (!(playerState.GetState() is PlayerJumping))
         {
-            MainCamera.SetActive(false);
+            
             AimCamera.SetActive(true);
+            MainCamera.SetActive(false);
         }
     }
 
     public void LeaveAim()
     {
-        AimCamera.SetActive(false);
+        
         MainCamera.SetActive(true);
+        AimCamera.SetActive(false);
     }
 
     public void SwapShoulder()

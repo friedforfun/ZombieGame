@@ -151,6 +151,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.started && playerState.GetState() is PlayerStanding)
         {
             playerState.sprinting = true;
@@ -163,16 +166,25 @@ public class PlayerControl : MonoBehaviour
 
     public void OnMoveInput(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         moveInput = context.ReadValue<Vector2>();
     }
 
     public void OnLookInput(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         lookInput = context.ReadValue<Vector2>();
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (!playerState.jumpBlocked)
         {
             if (context.canceled && playerState.GetState() is PlayerStanding)
@@ -186,6 +198,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnCrouch(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.started)
         {
             playerState.sprinting = false;
@@ -204,6 +219,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnShoot(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.started)
         {
             playerState.sprinting = false;
@@ -218,6 +236,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnAim(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.started)
         {
             playerState.sprinting = false;
@@ -233,6 +254,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnSwapShoulder(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.started)
         {
             PlayerCam.SwapShoulder();
@@ -242,6 +266,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnReload(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.canceled)
         {
             playerCombat.Reload();
@@ -250,6 +277,9 @@ public class PlayerControl : MonoBehaviour
 
     public void OnCycleWeapon(InputAction.CallbackContext context)
     {
+        if (Manager.PlayerControlLocked)
+            return;
+
         if (context.performed)
         {
             float direction = context.ReadValue<float>();

@@ -7,9 +7,10 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
 {
     [SerializeField] private HealthBar healthBar;
 
+
     private BaseState CurrentState;
     private PlayerCombat playerCombat;
-
+    private Manager gameManager;
     public int HitPoints = 100;
     public float WeaponSpreadMultiplier = 1.0f;
 
@@ -45,6 +46,9 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
     public void Kill()
     {
         SetState(new PlayerDead(gameObject));
+        FindObjectOfType<Manager>().EndGame();
+
+
     }
 
     public void SetState(BaseState state)
@@ -69,6 +73,10 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
 
         playerCombat = GetComponent<PlayerCombat>();
         if (playerCombat is null)
+            throw new UnassignedReferenceException();
+
+        gameManager = FindObjectOfType<Manager>();
+        if (gameManager is null)
             throw new UnassignedReferenceException();
     }
 

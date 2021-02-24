@@ -36,7 +36,7 @@ public class ProjectileBehaviour : MonoBehaviour
             if (now - startTime > 5f)
             {
                 hasImpacted = true;
-                StartCoroutine("destroySelf");
+                StartCoroutine(destroySelf());
             }
         }
 
