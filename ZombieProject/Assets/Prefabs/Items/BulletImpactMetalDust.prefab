@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 707356332857004753}
   - component: {fileID: 819746243751359247}
   - component: {fileID: 801007825023262931}
+  - component: {fileID: 461422681257877669}
   m_Layer: 0
   m_Name: BulletImpactMetalDust
   m_TagString: Untagged
@@ -4604,3 +4605,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &461422681257877669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710637086298572487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3cedb949dfc6b44aa88e1e82ba6471d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 5

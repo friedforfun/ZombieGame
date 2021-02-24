@@ -22,6 +22,7 @@ public class GunBehaviour : MonoBehaviour, IShootable
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private Transform muzzleLocation;
 
+    [SerializeField] public WeaponTypes weaponType;
     [SerializeField] public int ClipRemaining; // Number of bullets in clip
     [SerializeField] public int MagazineSize; // Size of magazine
     [SerializeField] protected float fireRate; // Rate of fire (time between each shot)

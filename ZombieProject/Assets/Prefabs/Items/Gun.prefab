@@ -148,9 +148,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 1324044863856508814, guid: 691af0f605711c3409439a880c3fe898,
     type: 3}
-  muzzleFlash: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4,
-    type: 3}
+  muzzleFlash: {fileID: 2731595380292301342}
   muzzleLocation: {fileID: 2874216137282282154}
+  weaponType: 0
   ClipRemaining: 12
   MagazineSize: 12
   fireRate: 0.3
@@ -158,7 +158,7 @@ MonoBehaviour:
   recoilForce: 1
   numProjectiles: 1
   fireMode: 0
-  impactSpreadRadius: 0.3
+  impactSpreadRadius: 0.01
 --- !u!114 &8334154319238674656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,9 +173,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 1324044863856508814, guid: d0f9f3cba70232c49a2cceb9f682b6ee,
     type: 3}
-  muzzleFlash: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4,
-    type: 3}
+  muzzleFlash: {fileID: 2731595380292301342}
   muzzleLocation: {fileID: 2874216137282282154}
+  weaponType: 1
   ClipRemaining: 50
   MagazineSize: 50
   fireRate: 0.1
@@ -183,7 +183,7 @@ MonoBehaviour:
   recoilForce: 1
   numProjectiles: 1
   fireMode: 1
-  impactSpreadRadius: 1
+  impactSpreadRadius: 0.02
 --- !u!114 &7777487789317392718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,9 +198,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 8992890921877304885, guid: c2b2840c3c5469e40821ec7d0af7c1c1,
     type: 3}
-  muzzleFlash: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4,
-    type: 3}
+  muzzleFlash: {fileID: 2731595380292301342}
   muzzleLocation: {fileID: 2874216137282282154}
+  weaponType: 2
   ClipRemaining: 8
   MagazineSize: 8
   fireRate: 0.8
@@ -208,7 +208,7 @@ MonoBehaviour:
   recoilForce: 1
   numProjectiles: 8
   fireMode: 0
-  impactSpreadRadius: 2
+  impactSpreadRadius: 0.05
 --- !u!1 &1902470036820814756
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,6 +296,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4,
         type: 3}
+      propertyPath: lengthInSec
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4,
+        type: 3}
       propertyPath: LightsModule.light
       value: 
       objectReference: {fileID: 108000013609061350, guid: fa35d75604d172d48b7a6b62a07c7dbf,
@@ -310,6 +315,12 @@ PrefabInstance:
 --- !u!4 &2835519051545174804 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000011227296186, guid: 9defeac88977c0d448aa4541073ee9e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2835012052404081326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2731595380292301342 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4,
     type: 3}
   m_PrefabInstance: {fileID: 2835012052404081326}
   m_PrefabAsset: {fileID: 0}

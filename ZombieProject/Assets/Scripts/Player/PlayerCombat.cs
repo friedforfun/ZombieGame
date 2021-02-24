@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -12,15 +12,16 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private GameObject AimSource;
     [SerializeField] private float AimRange;
 
-    [SerializeField] private PlayerWeapon LhGun;
-    [SerializeField] private PlayerWeapon RhGun;
+    [SerializeField] public PlayerWeapon LhGun;
+    [SerializeField] public PlayerWeapon RhGun;
 
     [SerializeField] private float AutoTargetRange = 10f;
 
     private PlayerRigging PlayerRig;
-
+    private bool canCycleWeapon = true;
     private Vector3 CrosshairPoint;
     private GameObject closestHostile = null;
+    private WeaponTypes currentWeapon = WeaponTypes.PISTOL;
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +54,30 @@ public class PlayerCombat : MonoBehaviour
 
     }
 
+    public void Reload()
+    {
+        RhGun.CurrentWeaponMode.reload();
+        LhGun.CurrentWeaponMode.reload();
+    }
+
+    public void CycleWeaponForwards()
+    {
+        if (canCycleWeapon)
+        {
+            canCycleWeapon = false;
+            StartCoroutine(CycleForwards());
+        }
+    }
+
+    public void CycleWeaponBackwards()
+    {
+        if (canCycleWeapon)
+        {
+            canCycleWeapon = false;
+            StartCoroutine(CycleBackwards());
+        }
+    }
+
     public void ShootDown()
     {
         LhGun.ShootDown();
@@ -81,6 +106,12 @@ public class PlayerCombat : MonoBehaviour
             return r.GetPoint(AimRange);
         }
 
+    }
+
+    private void SetWeapons()
+    {
+        LhGun.SwapWeapon(currentWeapon);
+        RhGun.SwapWeapon(currentWeapon);
     }
 
     private GameObject findClosestHostile()
@@ -159,6 +190,27 @@ public class PlayerCombat : MonoBehaviour
     private Vector3 targetDirection(GameObject target)
     {
         return transform.position - target.transform.position;
+    }
+
+    private IEnumerator CycleForwards()
+    {
+        int nextWeapon = ((int)currentWeapon + 1) % Enum.GetNames(typeof(WeaponTypes)).Length;
+        currentWeapon = (WeaponTypes) nextWeapon;
+        SetWeapons();
+        yield return new WaitForSeconds(0.15f);
+        canCycleWeapon = true;
+    }
+
+    private IEnumerator CycleBackwards()
+    {
+        
+        int previousWeapon = (int)currentWeapon - 1;
+        if (previousWeapon < 0)
+            previousWeapon = Enum.GetNames(typeof(WeaponTypes)).Length - 1;
+        currentWeapon = (WeaponTypes) previousWeapon;
+        SetWeapons();
+        yield return new WaitForSeconds(0.15f);
+        canCycleWeapon = true;
     }
 
 }

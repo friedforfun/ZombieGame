@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class PlayerWeapon : MonoBehaviour
@@ -50,9 +50,9 @@ public class PlayerWeapon : MonoBehaviour
                 CurrentWeaponMode = Shotgun;
                 break;
         }
-
-
     }
+
+
 
     public void ShootDown() 
     {
@@ -70,6 +70,19 @@ public class PlayerWeapon : MonoBehaviour
     {
         autoShoot = false;
     }
+    public GunBehaviour GetPistol()
+    {
+        return Pistol;
+    }
 
+    public GunBehaviour GetSMG()
+    {
+        return SMG;
+    }
+
+    public GunBehaviour GetShotgun()
+    {
+        return Shotgun;
+    }
 
 }

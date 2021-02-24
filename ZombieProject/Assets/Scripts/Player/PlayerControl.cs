@@ -22,6 +22,7 @@ public class PlayerControl : MonoBehaviour
     private float timeSinceGroundContact; 
 
     private PlayerStateManager playerState;
+    private PlayerCombat playerCombat;
 
     private float MoveModifier = 250f;
     private float SprintModifier = 1.5f;
@@ -38,6 +39,10 @@ public class PlayerControl : MonoBehaviour
     {
         playerState = GetComponent<PlayerStateManager>();
         if (playerState is null)
+            throw new UnassignedReferenceException();
+
+        playerCombat = GetComponent<PlayerCombat>();
+        if (playerCombat is null)
             throw new UnassignedReferenceException();
 
         cameraMainTransform = Camera.main.transform;
@@ -237,12 +242,26 @@ public class PlayerControl : MonoBehaviour
 
     public void OnReload(InputAction.CallbackContext context)
     {
-
+        if (context.canceled)
+        {
+            playerCombat.Reload();
+        }
     }
 
     public void OnCycleWeapon(InputAction.CallbackContext context)
     {
-
+        if (context.performed)
+        {
+            float direction = context.ReadValue<float>();
+            if (direction >= 0.9)
+            {
+                playerCombat.CycleWeaponForwards();
+            }
+            else if (direction <= -0.9)
+            {
+                playerCombat.CycleWeaponBackwards();
+            }
+        }
     }
 
 

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IHealable<int>, IKillable
 {
+    [SerializeField] private HealthBar healthBar;
+
     private BaseState CurrentState;
     private PlayerCombat playerCombat;
 
@@ -18,7 +20,7 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
     public void Damage(int damageTaken)
     {
         HitPoints -= damageTaken;
-
+        healthBar.SetHealth(HitPoints);
         if (HitPoints <= 0)
         {
             Kill();
