@@ -18,7 +18,7 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     private int HitPoints = 100;
     private BaseState CurrentState;
     public Animator animator;
-    public Rigidbody rigidbody;
+    public Rigidbody zombieRigidbody;
 
     public GameObject player;
     private int updateLimit = 2;
@@ -66,7 +66,7 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     void Start()
     {
         animator = GetComponent<Animator>();
-        rigidbody = GetComponent<Rigidbody>();
+        zombieRigidbody = GetComponent<Rigidbody>();
         CurrentState = new ZombieIdle(gameObject);
         HeadRig.weight = 0f;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -445,7 +445,7 @@ public class ZombieWander : ZombieUnaware
         Vector3 movement = zombie.transform.forward;
         movement.Scale(walkModifier);
 
-        zombie.rigidbody.AddForce(movement);
+        zombie.zombieRigidbody.AddForce(movement);
         zombie.animator.SetFloat("Speed", lerpAnimSpeed(0.5f, 0.25f));
 
     }
