@@ -30,6 +30,11 @@ public class Manager : MonoBehaviour
 
     }
 
+    public void WinGame()
+    {
+        menuController.Victory();
+    }
+
 
     public void Restart()
     {

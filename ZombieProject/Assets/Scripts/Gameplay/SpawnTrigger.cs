@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class SpawnTrigger : MonoBehaviour
 {
-    [SerializeField] protected string SpawnIdentifier = "Spawn";
+    [SerializeField] protected string SpawnIdentifier;
 
     private LayerMask playerLayer = 9;
     private bool hasFired = false;
 
     private void Start()
     {
-        SpawnIdentifier = GetComponentInParent<SpawnerIdentifier>().GetSpawnID();
+        //SpawnIdentifier = GetComponentInParent<SpawnerIdentifier>().GetSpawnID();
     }
 
     private void OnTriggerEnter(Collider other)

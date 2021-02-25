@@ -9,12 +9,13 @@ public class Spawner : MonoBehaviour
     [Range(1, 100)]
     [SerializeField] private int spawnAreaSize = 1;
     [SerializeField] private GameObject minion;
-    [SerializeField] protected string SpawnIdentifier = "Spawn";
+    [SerializeField] protected string SpawnIdentifier;
 
 
     [SerializeField] private float minionOffset;
     private void Start()
     {
+        EventManager.StartListening(SpawnIdentifier, Spawn);
         if (minionOffset is 0f)
             minionOffset = transform.position.y;
         
@@ -23,7 +24,7 @@ public class Spawner : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.StartListening(SpawnIdentifier, Spawn);
+        
     }
 
     protected void StartListening()

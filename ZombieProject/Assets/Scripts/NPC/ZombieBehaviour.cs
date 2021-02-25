@@ -22,8 +22,8 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     public Rigidbody zombieRigidbody;
 
     public GameObject player;
-    private float stateUpdateTickRate = 0.05f;
-    public float attackRange = 0.5f;
+    private float stateUpdateTickRate = 0.02f;
+    public float attackRange;
 
     public float AlertTimer = 2f;
     private float rigTransitionSpeed = 1f;
@@ -121,6 +121,7 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
  
     public void Attack()
     {
+        Debug.Log("Attack Player");
         animator.SetBool("InAttackRange", true);
     }
 
@@ -373,8 +374,8 @@ public class ZombiePursue : ZombieBaseState
     private float zOffset;
     public ZombiePursue(GameObject npc) : base(npc)
     {
-        xOffset = Random.Range(-(zombie.attackRange - 0.1f), (zombie.attackRange - 0.1f));
-        zOffset = Random.Range(-(zombie.attackRange - 0.1f), (zombie.attackRange - 0.1f));
+        xOffset = Random.Range(-(zombie.attackRange - 0.05f), (zombie.attackRange - 0.05f));
+        zOffset = Random.Range(-(zombie.attackRange - 0.05f), (zombie.attackRange - 0.05f));
     }
 
     public override void OnStateEnter()
@@ -395,6 +396,7 @@ public class ZombiePursue : ZombieBaseState
     public override void UpdateState()
     {
         zombie.animator.SetFloat("Speed", lerpAnimSpeed(1f, 0.25f));
+        Debug.Log(directionToPlayer().magnitude);
         if (directionToPlayer().magnitude < zombie.attackRange)
         {
             zombie.SetState(new ZombieAttack(npc));

@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class DoorOpener : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private string EventIdentifier;
+
+    void OnEnable()
     {
-        
+        EventManager.StartListening(EventIdentifier, OpenDoor);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDisable()
     {
-        
+        EventManager.StopListening(EventIdentifier, OpenDoor);
     }
 
     private void OpenDoor()
     {
-        //LeanTween.moveLocalY();
+        LeanTween.moveLocalY(gameObject, 31f, 25f).setEaseOutQuad();
     }
 
 }

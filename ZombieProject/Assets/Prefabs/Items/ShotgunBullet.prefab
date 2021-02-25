@@ -248,7 +248,7 @@ MonoBehaviour:
   projectileDamage: 15
   ImpactEffect: {fileID: 819746243751359247, guid: 051c60a824797a94f92f83dbd82a639b,
     type: 3}
-  projectileForce: 20
+  projectileForce: 40
   bulletRigidBody: {fileID: 5974514655658970896}
   fullDamageRange: 10
   projectileDamageRange: 100

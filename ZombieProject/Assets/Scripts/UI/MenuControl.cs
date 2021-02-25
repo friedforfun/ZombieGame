@@ -7,6 +7,7 @@ public class MenuControl : MonoBehaviour
     public GameObject GameOverUI;
     public GameObject GameplayUI;
     public GameObject StartUI;
+    public GameObject VictoryUI;
 
 
     void Start()
@@ -15,6 +16,7 @@ public class MenuControl : MonoBehaviour
         StartUI.SetActive(true);
         GameplayUI.SetActive(false);
         GameOverUI.SetActive(false);
+        VictoryUI.SetActive(false);
     }
 
     void PauseGame()
@@ -28,6 +30,7 @@ public class MenuControl : MonoBehaviour
         GameplayUI.SetActive(true);
         GameOverUI.SetActive(false);
         StartUI.SetActive(false);
+        VictoryUI.SetActive(false);
     }
 
     public void StartGame()
@@ -52,6 +55,13 @@ public class MenuControl : MonoBehaviour
         GameplayUI.SetActive(false);
         GameOverUI.SetActive(true);
         
+    }
+
+    public void Victory()
+    {
+        PauseGame();
+        GameplayUI.SetActive(false);
+        VictoryUI.SetActive(true);
     }
 
 }
