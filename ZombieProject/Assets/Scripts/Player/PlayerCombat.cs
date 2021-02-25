@@ -58,7 +58,7 @@ public class PlayerCombat : MonoBehaviour
         }
         else
         {
-            Debug.Log("Should aim at enemy");
+            //Debug.Log("Should aim at enemy");
             offhandTarget(closestHostile.transform.position);
             SetHeadTarget(closestHostile.transform.position);
         }
@@ -179,8 +179,8 @@ public class PlayerCombat : MonoBehaviour
         Ray los = new Ray(AimSource.transform.position, directionToOther);
         if (Physics.Raycast(los, out hit))
         {
-            Debug.Log($"Hit name: {hit.transform.name}");
-            Debug.Log($"Other name: {other.transform.name}");
+            //Debug.Log($"Hit name: {hit.transform.name}");
+            //Debug.Log($"Other name: {other.transform.name}");
             if (hit.transform.name == target.transform.name)
                 return true;
         }

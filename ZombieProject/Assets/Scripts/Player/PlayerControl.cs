@@ -48,6 +48,7 @@ public class PlayerControl : MonoBehaviour
         cameraMainTransform = Camera.main.transform;
 
         moveInput = Vector2.zero;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()

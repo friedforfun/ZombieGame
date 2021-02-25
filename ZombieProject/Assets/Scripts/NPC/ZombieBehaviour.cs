@@ -12,12 +12,9 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     [SerializeField] public GameObject LookTarget;
     [SerializeField] public Transform LineOfSightCheckPoint;
     [SerializeField] public NavMeshAgent agent;
-    [SerializeField] private BoxCollider LeftHand;
-    [SerializeField] private BoxCollider RightHand;
 
     [SerializeField] public float DetectPlayerRange = 8f;
-    [SerializeField] public LayerMask PlayerLayer;
-
+    [SerializeField] private int HitDamage = 100;
 
     private int HitPoints = 200;
     private BaseState CurrentState;
@@ -25,14 +22,14 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
     public Rigidbody zombieRigidbody;
 
     public GameObject player;
-    private int updateLimit = 2;
-    private int currentUpdate = 0;
+    private float stateUpdateTickRate = 0.05f;
     public float attackRange = 0.5f;
 
     public float AlertTimer = 2f;
     private float rigTransitionSpeed = 1f;
     private bool alertTriggered = false;
 
+    private bool canDamage = true;
 
     public void Damage(int damageTaken)
     {
@@ -84,6 +81,8 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
         {
             player = players[0];
         }
+
+        StartCoroutine(CheckState());
     }
 
     // Update is called once per frame
@@ -102,16 +101,24 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
 
     void FixedUpdate()
     {
-        currentUpdate++;
 
-        // Reduce stateupdate frequency
-        if (currentUpdate % updateLimit == 0)
-        {
-            CurrentState.UpdateState();
-            currentUpdate = 0;
-        }
     }
 
+
+
+    public void ApplyDamage(GameObject player)
+    {
+        if (IsDead()) return;
+
+        if (canDamage)
+        {
+            canDamage = false;
+            IDamagable<int> damagable = player.GetComponentInParent<IDamagable<int>>();
+            damagable.Damage(HitDamage);
+            StartCoroutine(resetCanDamage());
+        }
+    }
+ 
     public void Attack()
     {
         animator.SetBool("InAttackRange", true);
@@ -172,6 +179,21 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
         else return false;
     }
 
+    private IEnumerator resetCanDamage()
+    {
+        yield return new WaitForSeconds(2f);
+        canDamage = true;
+    }
+
+    private IEnumerator CheckState()
+    {
+        for (; ; )
+        {
+            CurrentState.UpdateState();
+            yield return new WaitForSeconds(stateUpdateTickRate);
+        }
+    }
+
 }
 
 
@@ -181,7 +203,7 @@ public class ZombieBaseState : NPCBaseState
     protected ZombieBehaviour zombie;
     protected float enterStateTime;
     protected float initAnimSpeed;
-    private float notifyNearbyDistance = 15f;
+    private float notifyNearbyDistance = 8f;
 
     public static ZombieDead zombieDead;
 
@@ -275,10 +297,10 @@ public class ZombieUnaware : ZombieBaseState
         //Debug.Log($"Distance: {distance}");
         if (distance < detectRange) // player in range
         {
-            Debug.Log("Player in range");
+            //Debug.Log("Player in range");
             if (Mathf.Abs(angle) > 80 && LineOfSightCheck(zombie.player))
             {
-                Debug.Log("Zombie should be alerted");
+                //Debug.Log("Zombie should be alerted");
                 zombie.Alert();
             }
         }
@@ -401,7 +423,7 @@ public class ZombieAlerted : ZombieBaseState
         zombie.agent.ResetPath();
         zombie.animator.SetTrigger("Alerted");
         notifyNearbyZombies();
-        Debug.Log("ZOMBIE ALERTED!");
+        //Debug.Log("ZOMBIE ALERTED!");
     }
 
     public override void OnStateLeave()
@@ -464,7 +486,7 @@ public class ZombieWander : ZombieUnaware
 
     public ZombieWander(GameObject npc) : base(npc)
     {
-        wanderDistance = Random.Range(2.0f, 4.0f);
+        wanderDistance = Random.Range(2.0f, 8.0f);
         //wanderDirection = pickDirection();
         //walkModifier = new Vector3(zombie.MovementSpeed * 0.5f, zombie.MovementSpeed * 0.5f, zombie.MovementSpeed * 0.5f);
         rawDestination = Random.insideUnitSphere * wanderDistance;
@@ -549,7 +571,7 @@ public class ZombieDead : ZombieBaseState
         zombie.agent.ResetPath();
         zombie.animator.SetTrigger("Death");
         zombie.animator.SetBool("IsDead", true);
-        Debug.Log("Enter death state");
+        //Debug.Log("Enter death state");
         //zombie.animator.ResetTrigger("IsDead");
         zombie.animator.SetFloat("Speed", 0);
     }

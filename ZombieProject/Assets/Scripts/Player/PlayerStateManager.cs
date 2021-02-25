@@ -6,12 +6,14 @@ using UnityEngine;
 public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IHealable<int>, IKillable
 {
     [SerializeField] private HealthBar healthBar;
-
+    [SerializeField] private int RegenerateTick = 5;
 
     private BaseState CurrentState;
     private PlayerCombat playerCombat;
     private Manager gameManager;
-    public int HitPoints = 100;
+
+    public int HitPoints = 1000;
+    private int currentHitPoints;
     public float WeaponSpreadMultiplier = 1.0f;
 
     public bool sprinting = false;
@@ -20,9 +22,9 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
 
     public void Damage(int damageTaken)
     {
-        HitPoints -= damageTaken;
-        healthBar.SetHealth(HitPoints);
-        if (HitPoints <= 0)
+        currentHitPoints -= damageTaken;
+        healthBar.SetHealth(currentHitPoints);
+        if (currentHitPoints <= 0)
         {
             Kill();
         }
@@ -35,20 +37,24 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
 
     public void Heal(int healAmount)
     {
-        throw new System.NotImplementedException();
+        currentHitPoints += healAmount;
+        if (currentHitPoints > HitPoints)
+        {
+            currentHitPoints = HitPoints;
+        }
+        healthBar.SetHealth(currentHitPoints);
     }
 
     public bool IsDead()
     {
-        throw new System.NotImplementedException();
+        if (CurrentState is PlayerDead) return true;
+        return false;
     }
 
     public void Kill()
     {
         SetState(new PlayerDead(gameObject));
         FindObjectOfType<Manager>().EndGame();
-
-
     }
 
     public void SetState(BaseState state)
@@ -69,6 +75,8 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
     // Start is called before the first frame update
     void Start()
     {
+        currentHitPoints = HitPoints;
+        healthBar.SetMaxHealth(HitPoints);
         CurrentState = new PlayerStanding(gameObject);
 
         playerCombat = GetComponent<PlayerCombat>();
@@ -78,6 +86,8 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
         gameManager = FindObjectOfType<Manager>();
         if (gameManager is null)
             throw new UnassignedReferenceException();
+
+        StartCoroutine(regen());
     }
 
     // Update is called once per frame
@@ -94,6 +104,17 @@ public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IH
     public void ShootUp()
     {
         playerCombat.ShootUp();
+    }
+
+    private IEnumerator regen()
+    {
+        for (; ; )
+        {
+            Heal(RegenerateTick);
+            yield return new WaitForSeconds(1f);
+        }
+        
+
     }
 
 }

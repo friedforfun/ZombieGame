@@ -149,13 +149,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5114339162264472286, guid: a36db1194de54304b80d996aded242f0,
         type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.000005915761
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339162264472286, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.442006
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339162264472286, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5114339162580952402, guid: a36db1194de54304b80d996aded242f0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5
+      value: 0.000005915761
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339162580952402, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.4420043
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339162580952402, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.863
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339162580952402, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5114339162580952402, guid: a36db1194de54304b80d996aded242f0,
         type: 3}
@@ -192,6 +217,11 @@ PrefabInstance:
       propertyPath: AimTargetReticle
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5114339162646240549, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.942
+      objectReference: {fileID: 0}
     - target: {fileID: 5114339163503236819, guid: a36db1194de54304b80d996aded242f0,
         type: 3}
       propertyPath: m_Follow
@@ -211,6 +241,11 @@ PrefabInstance:
         type: 3}
       propertyPath: AimTargetReticle
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339163503236822, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.942
       objectReference: {fileID: 0}
     - target: {fileID: 5114339163816571581, guid: a36db1194de54304b80d996aded242f0,
         type: 3}
@@ -297,6 +332,16 @@ PrefabInstance:
       propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 4717383473342370851}
+    - target: {fileID: 5114339164248739526, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.000005915761
+      objectReference: {fileID: 0}
+    - target: {fileID: 5114339164248739526, guid: a36db1194de54304b80d996aded242f0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.4420043
+      objectReference: {fileID: 0}
     - target: {fileID: 5114339164248739526, guid: a36db1194de54304b80d996aded242f0,
         type: 3}
       propertyPath: m_LocalRotation.x
@@ -529,7 +574,7 @@ PrefabInstance:
         type: 3}
       propertyPath: TargetReticle
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8635959947769755622}
     - target: {fileID: 1859414258097299955, guid: 2b15461e40eab574eb219a1c487a7c62,
         type: 3}
       propertyPath: PlayerCam
@@ -537,9 +582,14 @@ PrefabInstance:
       objectReference: {fileID: 4717383471525717067}
     - target: {fileID: 1859414258097299964, guid: 2b15461e40eab574eb219a1c487a7c62,
         type: 3}
+      propertyPath: HitPoints
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1859414258097299964, guid: 2b15461e40eab574eb219a1c487a7c62,
+        type: 3}
       propertyPath: healthBar
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8635959947054766217}
     - target: {fileID: 2181798409312323167, guid: 2b15461e40eab574eb219a1c487a7c62,
         type: 3}
       propertyPath: m_RootOrder
@@ -615,6 +665,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6370f2225cc58b74e8426b8df03e62c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5599921123389974347 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1516761702327295206, guid: 2b15461e40eab574eb219a1c487a7c62,
+    type: 3}
+  m_PrefabInstance: {fileID: 6393550357594586029}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9b5419e3406fa41997daa8337454fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4717383473342370851 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1859414258096402318, guid: 2b15461e40eab574eb219a1c487a7c62,
@@ -628,6 +690,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4717383472919479393}
     m_Modifications:
+    - target: {fileID: 3065361562014396929, guid: 5305790e39f21f645853655122c0de35,
+        type: 3}
+      propertyPath: playerCombat
+      value: 
+      objectReference: {fileID: 5599921123389974347}
     - target: {fileID: 3065361562790064259, guid: 5305790e39f21f645853655122c0de35,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -797,3 +864,21 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6724804192405975595}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8635959947769755622 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3065361562571851213, guid: 5305790e39f21f645853655122c0de35,
+    type: 3}
+  m_PrefabInstance: {fileID: 6724804192405975595}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8635959947054766217 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3065361562397649570, guid: 5305790e39f21f645853655122c0de35,
+    type: 3}
+  m_PrefabInstance: {fileID: 6724804192405975595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa40be2f11ab4e547b1bda9fe4de98a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
