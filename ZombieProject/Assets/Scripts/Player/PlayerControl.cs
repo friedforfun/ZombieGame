@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Handles user input and player state transitions
+/// Handles user input and most player state transitions
+/// Use unity input system with unity events
 /// </summary>
 public class PlayerControl : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private Animator PlayerAnimator;
 
     [SerializeField] private PlayerCamera PlayerCam;
-    [SerializeField] private Transform CameraLookTarget;
+    [SerializeField] private Transform CameraLookTarget; // This is used as a 'pivot' for the vertical (cinemachine) camera rotation
     private Transform cameraMainTransform;
 
     [SerializeField] private Transform PlayerCentrePoint;
@@ -24,10 +25,10 @@ public class PlayerControl : MonoBehaviour
     private PlayerStateManager playerState;
     private PlayerCombat playerCombat;
 
-    private float MoveModifier = 250f;
-    private float SprintModifier = 1.5f;
+    private float MoveModifier = 2500f;
+    private float SprintModifier = 2f;
     private float LookModifier = 0.1f;
-    private float JumpModifier = 225f;
+    private float JumpModifier = 2250f;
 
     private float aimPenalty = 0.35f;
     private float crouchPenalty = 0.5f;
@@ -79,6 +80,10 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spherecast towards ground to check if the player is touching the floor
+    /// </summary>
+    /// <returns></returns>
     public bool isGrounded()
     {
         Vector3 SpherePoint = PlayerCentrePoint.position;
@@ -92,6 +97,9 @@ public class PlayerControl : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// How camera rotation is handled, note that the camera look target is rotated vertically instead of the player
+    /// </summary>
     private void ApplyLook()
     {
         float xLook = lookInput.x * LookModifier;
@@ -120,6 +128,9 @@ public class PlayerControl : MonoBehaviour
         lookInput = Vector2.zero;
     }
 
+    /// <summary>
+    /// How player movement is applied (using rigidbody)
+    /// </summary>
     private void ApplyMovement()
     {
         // Compute movement and make it apply in the direction the camera is facing
@@ -141,7 +152,7 @@ public class PlayerControl : MonoBehaviour
             movement.z *= SprintModifier;
         }
 
-
+        // Apply force in direction of movement
         PlayerRigibody.AddForce(movement, ForceMode.Impulse);
 
         Vector3 localisedMovement = transform.InverseTransformVector(movement);
@@ -304,18 +315,13 @@ public class PlayerControl : MonoBehaviour
 
         for (int i = 0; i < 2; i++)
         {
-            //Debug.Log("Jump stage: "+i);
-
-            // i == 0 -> start jump animation
-
-            // i == 1 -> In air animation
             if (i == 0)
             {
                 PlayerAnimator.SetTrigger("Jump");
             }
             else
             {
-                Debug.Log("Jump!");
+                //Debug.Log("Jump!");
                 PlayerAnimator.ResetTrigger("Jump");
                 PlayerRigibody.AddForce(Vector3.up * JumpModifier);
                 playerState.SetState(new PlayerJumping(gameObject));

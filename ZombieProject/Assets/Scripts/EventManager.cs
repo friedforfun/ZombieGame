@@ -5,6 +5,10 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Event manager to handle custom unity events 
+/// pretty standard observer pattern using dict (string -> event)
+/// </summary>
 public class EventManager : MonoBehaviour
 {
 

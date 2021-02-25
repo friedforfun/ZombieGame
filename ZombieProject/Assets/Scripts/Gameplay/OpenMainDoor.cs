@@ -26,13 +26,14 @@ public class OpenMainDoor : MonoBehaviour
         else
         {
             LeanTween.moveLocalZ(gameObject, 52f, 40f).setEaseOutQuad();
-            AlertAll();
+            StartCoroutine(AlertAll());
         }
         
     }
 
-    private void AlertAll()
+    private IEnumerator AlertAll()
     {
+        yield return new WaitForSeconds(4f);
         GameObject[] zombies = GameObject.FindGameObjectsWithTag("Hostile");
         foreach (GameObject zombie in zombies)
         {

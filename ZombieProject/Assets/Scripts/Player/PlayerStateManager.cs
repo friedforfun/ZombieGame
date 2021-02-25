@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>
+/// Players state is defined here, this handles player states - jumping, standing, crouched(no animation implemented)
+/// Health interactions are handled here, including transition to death state
+/// </summary>
 public class PlayerStateManager : MonoBehaviour, IHaveState, IDamagable<int>, IHealable<int>, IKillable
 {
     [SerializeField] private HealthBar healthBar;

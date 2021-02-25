@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Base state abstract class for FSM
+/// </summary>
 public abstract class BaseState
 {
     public virtual void OnStateEnter() { }
@@ -11,7 +14,10 @@ public abstract class BaseState
     public abstract void UpdateState();
 }
 
-
+/// <summary>
+/// Parent state of all npc states
+/// Ensures we have a reference to the game object, since states do not inherit Monobehaviour
+/// </summary>
 public class NPCBaseState: BaseState
 {
     protected GameObject npc;
@@ -37,7 +43,6 @@ public class PlayerBaseState : BaseState
 
     protected GameObject player;
     protected PlayerStateManager playerStateManager;
-    protected bool isGrounded;
  
     public PlayerBaseState(GameObject player)
     {

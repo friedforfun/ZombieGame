@@ -3,12 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Tracks win/loss & score (number of kills)
+/// Also handles reseting the scene and quitting the game.
+/// </summary>
 public class Manager : MonoBehaviour
 {
     public static bool PlayerControlLocked = true;
-    bool gameEnded = false;
-    float GameOverDelay = 4f;
+    private bool gameEnded = false;
+    private float GameOverDelay = 2f;
     private MenuControl menuController;
+
+    private int kills = 0;
+
+    private void OnEnable()
+    {
+        EventManager.StartListening("Kills", UpdateKills);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening("Kills", UpdateKills);
+    }
 
     private void Start()
     {
@@ -30,8 +46,20 @@ public class Manager : MonoBehaviour
 
     }
 
+    public int GetKills()
+    {
+        return kills;
+    }
+
+    private void UpdateKills()
+    {
+        Debug.Log("Kill!");
+        kills++;
+    }
+
     public void WinGame()
     {
+        PlayerControlLocked = true;
         menuController.Victory();
     }
 

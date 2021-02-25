@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/URPdefaults/Scenes/SampleScene.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TestSpace.unity
     guid: 883728c0c8875014f9fda4d4f71f75c0
+  - enabled: 1
+    path: Assets/Scenes/Level0.unity
+    guid: 7d4275d8bc398d24a81d81b8a291ba32
   m_configObjects: {}

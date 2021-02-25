@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.AI;
 
+/// <summary>
+/// Determines the behavour of the zombies, uses a FSM
+/// </summary>
 public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveState
 {
 
@@ -51,6 +54,9 @@ public class ZombieBehaviour : MonoBehaviour, IKillable, IDamagable<int>, IHaveS
 
     public void Kill()
     {
+        if (!IsDead())
+            EventManager.TriggerEvent("Kills");
+
         SetState(new ZombieDead(gameObject));
     }
 
@@ -370,12 +376,10 @@ public class ZombieAttack : ZombieBaseState
 
 public class ZombiePursue : ZombieBaseState
 {
-    private float xOffset;
-    private float zOffset;
+    private float targetOffset = 1.4f;
     public ZombiePursue(GameObject npc) : base(npc)
     {
-        xOffset = Random.Range(-(zombie.attackRange - 0.05f), (zombie.attackRange - 0.05f));
-        zOffset = Random.Range(-(zombie.attackRange - 0.05f), (zombie.attackRange - 0.05f));
+
     }
 
     public override void OnStateEnter()
@@ -387,9 +391,9 @@ public class ZombiePursue : ZombieBaseState
 
     protected void MoveTowardPlayer()
     {
-        Vector3 nearPlayer = zombie.player.transform.position;
-        nearPlayer.x += xOffset;
-        nearPlayer.z += zOffset;
+        Vector2 rawPosition = Random.insideUnitCircle * targetOffset;
+        Vector3 nearPlayer = new Vector3(zombie.player.transform.position.x + rawPosition.x, zombie.player.transform.position.y, zombie.player.transform.position.z + rawPosition.y);
+
         zombie.agent.SetDestination(nearPlayer);
     }
 

@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Target selection, and shooting
+/// Target selection, shooting, and changing weapons
 /// </summary>
 public class PlayerCombat : MonoBehaviour
 {
@@ -101,6 +101,10 @@ public class PlayerCombat : MonoBehaviour
         RhGun.ShootUp();
     }
 
+    /// <summary>
+    /// Raycast from camera to the point in the world the crosshair is over
+    /// </summary>
+    /// <returns>point in the world the crosshair hit, or at the max range</returns>
     public Vector3 CrosshairAimAt()
     {
 
@@ -125,6 +129,10 @@ public class PlayerCombat : MonoBehaviour
         RhGun.SwapWeapon(currentWeapon);
     }
 
+    /// <summary>
+    /// Loop over all hostiles, find the closest one that is also in line of sight
+    /// </summary>
+    /// <returns>closest hostile</returns>
     private GameObject findClosestHostile()
     {
         GameObject[] hostiles = GameObject.FindGameObjectsWithTag("HostileRigTarget");
@@ -170,6 +178,11 @@ public class PlayerCombat : MonoBehaviour
         return closestHostile;
     }
 
+    /// <summary>
+    /// Find if other is in line of sight (from players head)
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
     private bool InLineOfSight(GameObject other)
     {
         GameObject target = other.GetComponent<ParentPointer>().Parent();

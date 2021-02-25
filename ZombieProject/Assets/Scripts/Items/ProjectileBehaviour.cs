@@ -18,6 +18,8 @@ public class ProjectileBehaviour : MonoBehaviour
     private float startTime;
     private Vector3 startPosition;
     private int trueDamage;
+    private Vector3 currentVelocity;
+    private int maxBounces = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +32,7 @@ public class ProjectileBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        currentVelocity = bulletRigidBody.velocity;
         if (!hasImpacted)
         {
             float now = Time.time;
@@ -66,6 +69,14 @@ public class ProjectileBehaviour : MonoBehaviour
         }
         ContactPoint hit = collision.GetContact(0);
         Instantiate<ParticleSystem>(ImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+
+        if (maxBounces > 0)
+        {
+            maxBounces--;
+            Vector3 newDirection = Vector3.Reflect(currentVelocity, hit.normal);
+            bulletRigidBody.AddForce(newDirection, ForceMode.Impulse);
+        }
+
 
         if (!hasImpacted)
         {

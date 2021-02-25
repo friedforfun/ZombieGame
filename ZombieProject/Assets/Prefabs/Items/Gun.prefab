@@ -206,7 +206,7 @@ MonoBehaviour:
   fireRate: 0.8
   reloadTime: 2.5
   recoilForce: 1
-  numProjectiles: 8
+  numProjectiles: 12
   fireMode: 0
   impactSpreadRadius: 0.05
 --- !u!1 &1902470036820814756
